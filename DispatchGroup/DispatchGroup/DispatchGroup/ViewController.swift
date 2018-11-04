@@ -21,6 +21,9 @@ class ViewController: UIViewController {
         // Dispatch group in sync
         syncGlobalQueue()
         syncCurrentQueue()
+
+        // Multiple dispatch group in async
+        multipleDispatchQueue()
     }
 }
 
@@ -184,6 +187,59 @@ extension ViewController {
         group.notify(queue: .main) {
             print("[sync in current queue] Tasks all finished")
             print("[sync in current queue] end")
+        }
+    }
+
+    func multipleDispatchQueue() {
+
+        print("[multiple dispatch queue1] start")
+
+        let group1 = DispatchGroup()
+
+        group1.enter()
+
+        DispatchQueue.global().async {
+            print("[multiple dispatch queue1] Task1 is in main thread: \(Thread.isMainThread)")
+            print("[multiple dispatch queue1] Task2 is in main thread: \(Thread.isMainThread)")
+            group1.leave()
+        }
+
+        group1.enter()
+        DispatchQueue.global().async {
+            print("[multiple dispatch queue1] Task3 is in main thread: \(Thread.isMainThread)")
+            print("[multiple dispatch queue1] Task4 is in main thread: \(Thread.isMainThread)")
+            print("[multiple dispatch queue1] Task5 is in main thread: \(Thread.isMainThread)")
+            group1.leave()
+        }
+
+        group1.notify(queue: .main) {
+            print("[multiple dispatch queue1] Tasks all finished")
+            print("[multiple dispatch queue1] end")
+        }
+
+        print("[multiple dispatch queue2] start")
+
+        let group2 = DispatchGroup()
+
+        group2.enter()
+
+        DispatchQueue.global().async {
+            print("[multiple dispatch queue2] Task1 is in main thread: \(Thread.isMainThread)")
+            print("[multiple dispatch queue2] Task2 is in main thread: \(Thread.isMainThread)")
+            group2.leave()
+        }
+
+        group2.enter()
+        DispatchQueue.global().async {
+            print("[multiple dispatch queue2] Task3 is in main thread: \(Thread.isMainThread)")
+            print("[multiple dispatch queue2] Task4 is in main thread: \(Thread.isMainThread)")
+            print("[multiple dispatch queue2] Task5 is in main thread: \(Thread.isMainThread)")
+            group2.leave()
+        }
+
+        group2.notify(queue: .main) {
+            print("[multiple dispatch queue2] Tasks all finished")
+            print("[multiple dispatch queue2] end")
         }
     }
 }
