@@ -13,6 +13,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // Custom queue in sync
+        syncCustomQueue()
+        syncCustomQueue2()
+
         // Dispatch group in async
         asyncGlobalQueue()
         asyncGlobalQueue2()
@@ -128,6 +132,47 @@ extension ViewController {
             print("[async in main queue] Tasks all finished")
             print("[async in main queue] end")
         }
+    }
+
+    func syncCustomQueue() {
+
+        print("[sync in custom queue] start")
+
+        let queue = DispatchQueue(label: "My Queue") // Default is a serial queue
+
+        queue.sync {
+            print("[sync in custom queue] Task1 is in main thread: \(Thread.isMainThread)") // true, false is async
+            print("[sync in custom queue] Task2 is in main thread: \(Thread.isMainThread)") // true, false is async
+        }
+
+        queue.sync {
+            print("[sync in custom queue] Task3 is in main thread: \(Thread.isMainThread)") // true, false is async
+            print("[sync in custom queue] Task4 is in main thread: \(Thread.isMainThread)") // true, false is async
+            print("[sync in custom queue] Task5 is in main thread: \(Thread.isMainThread)") // true, false is async
+        }
+
+        print("Main thread running")
+    }
+
+    func syncCustomQueue2() {
+
+        // The result is same as syncCustomQueue
+        print("[sync in custom queue2] start")
+
+        let queue = DispatchQueue(label: "My Queue", attributes: .concurrent) // is a concurrent queue
+
+        queue.sync {
+            print("[sync in custom queue2] Task1 is in main thread: \(Thread.isMainThread)") // true, false is async
+            print("[sync in custom queue2] Task2 is in main thread: \(Thread.isMainThread)") // true, false is async
+        }
+
+        queue.sync {
+            print("[sync in custom queue2] Task3 is in main thread: \(Thread.isMainThread)") // true, false is async
+            print("[sync in custom queue2] Task4 is in main thread: \(Thread.isMainThread)") // true, false is async
+            print("[sync in custom queue2] Task5 is in main thread: \(Thread.isMainThread)") // true, false is async
+        }
+
+        print("Main thread running")
     }
 
     func syncGlobalQueue() {
